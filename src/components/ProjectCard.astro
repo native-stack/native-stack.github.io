@@ -1,0 +1,92 @@
+---
+interface Props {
+  name: string;
+  version: string;
+  description: string;
+  stats?: string;
+  installCmd: string;
+  npmUrl: string;
+}
+
+const { name, version, description, stats, installCmd, npmUrl } = Astro.props;
+---
+
+<div class="group project-card rounded-2xl border border-white/5 bg-navy-light/60 p-8 backdrop-blur-sm flex flex-col h-full">
+  <!-- Header: name + version badge -->
+  <div class="mb-4 flex flex-wrap items-center gap-3">
+    <h3 class="font-mono text-lg font-bold tracking-tight text-white sm:text-xl">{name}</h3>
+    <span class="rounded-full border border-brand-blue/30 bg-brand-blue/10 px-3 py-0.5 font-mono text-xs font-medium text-brand-blue-light">
+      {version}
+    </span>
+  </div>
+
+  <!-- Description -->
+  <p class="mb-4 leading-relaxed text-slate-light">{description}</p>
+
+  <!-- Stats -->
+  {stats && (
+    <p class="mb-6 font-mono text-xs text-brand-blue-light/70 uppercase tracking-widest">{stats}</p>
+  )}
+
+  <!-- Spacer to push build button to bottom -->
+  <div class="flex-grow"></div>
+
+  <!-- Install command -->
+  <div class="mb-6 flex items-center gap-2 overflow-hidden rounded-lg border border-white/5 bg-[#0D1117] px-4 py-3 font-mono text-sm">
+    <span class="select-none text-brand-blue-light">❯</span>
+    <code class="flex-1 text-brand-orange">{installCmd}</code>
+    <button
+      class="copy-btn flex-shrink-0 rounded-md p-1.5 text-slate/50 transition-colors hover:bg-white/5 hover:text-white"
+      data-cmd={installCmd}
+      aria-label="Copy install command"
+    >
+      <!-- Clipboard icon -->
+      <svg class="copy-icon size-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+      </svg>
+      <!-- Check icon (shown after copy) -->
+      <svg class="check-icon hidden size-4 text-accent" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- CTA button -->
+  <a
+    href={npmUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="group/btn inline-flex items-center gap-2 rounded-xl border border-brand-blue/40 bg-brand-blue/10 px-6 py-3 text-sm font-semibold text-brand-blue-light transition-all duration-300 hover:bg-brand-blue/20 hover:border-brand-blue/60 hover:scale-[1.02] active:scale-[0.98]"
+  >
+    View on npm
+    <svg class="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+    </svg>
+  </a>
+</div>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const cmd = btn.getAttribute('data-cmd');
+      if (!cmd) return;
+
+      try {
+        await navigator.clipboard.writeText(cmd);
+      } catch {
+        /* fallback: no-op in non-secure contexts */
+      }
+
+      const copyIcon = btn.querySelector('.copy-icon') as HTMLElement;
+      const checkIcon = btn.querySelector('.check-icon') as HTMLElement;
+
+      copyIcon.classList.add('hidden');
+      checkIcon.classList.remove('hidden');
+
+      setTimeout(() => {
+        checkIcon.classList.add('hidden');
+        copyIcon.classList.remove('hidden');
+      }, 1500);
+    });
+  });
+</script>

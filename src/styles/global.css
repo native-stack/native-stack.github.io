@@ -199,6 +199,19 @@ body {
     box-shadow: 0 20px 40px -15px rgba(59, 76, 192, 0.2);
 }
 
+/* Project card hover glow */
+.project-card {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(59, 76, 192, 0.3);
+    box-shadow:
+        0 0 30px rgba(59, 76, 192, 0.12),
+        0 20px 40px -15px rgba(59, 76, 192, 0.2);
+}
+
 /* Staggered animation delays */
 .stagger-1 {
     animation-delay: 0.1s;
@@ -267,7 +280,7 @@ body {
     }
 
     to {
-        width: 14ch;
+        width: 56ch;
     }
 }
 
